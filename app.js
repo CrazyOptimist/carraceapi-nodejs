@@ -4,9 +4,21 @@ const saveStatus = require('./saveStatus');
 function getRaceStatus() {
   axios.get('https://api.beta.tab.com.au/v1/tab-info-service/racing/dates/2020-02-04/meetings?jurisdiction=VIC')
     .then(response => {
-      var raceStatus = response.data.meetings[0].races[0].raceStatus;
+      var raceStatus = [];
+      response.data.meetings.forEach(element => {
+        var meetingName = element.meetingName;
+        element.races.forEach(element => {
+          var raceNumber = element.raceNumber;
+          raceStatus.push({
+            "meetingName": meetingName,
+            "raceNumber": raceNumber,
+            "raceStatus": element.raceStatus,
+          });
+        });
+      });
+
       var timenow = new Date();
-      console.log(raceStatus);
+      //console.log(raceStatus);
       console.log(timenow.toString());
       var statusEntry = {
         "raceStatus": raceStatus,
@@ -14,10 +26,10 @@ function getRaceStatus() {
       }
       saveStatus(statusEntry);
     }).catch(error => {
-      console.log(error);
+      throw error;
     });
 }
 
 setInterval(() => {
   getRaceStatus();
-},1000)
+},2000)
