@@ -2,18 +2,18 @@ const axios = require('axios');
 const saveStatus = require('./saveStatus');
 
 function getRaceStatus() {
-  axios.get('https://api.beta.tab.com.au/v1/tab-info-service/racing/dates/2020-02-04/meetings?jurisdiction=VIC')
+  axios.get('https://api.beta.tab.com.au/v1/tab-info-service/racing/dates/2020-02-05/meetings?jurisdiction=VIC')
     .then(response => {
       var raceStatus = [];
-      response.data.meetings.forEach(element => {
-        var meetingName = element.meetingName;
-        element.races.forEach(element => {
-          var raceNumber = element.raceNumber;
-          raceStatus.push({
-            "meetingName": meetingName,
-            "raceNumber": raceNumber,
-            "raceStatus": element.raceStatus,
-          });
+      //console.log(response.data.meetings[2])
+      var meeting = response.data.meetings[2];
+      var meetingName = meeting.meetingName;
+      meeting.races.forEach(element => {
+        var raceNumber = element.raceNumber;
+        raceStatus.push({
+          "meetingName": meetingName,
+          "raceNumber": raceNumber,
+          "raceStatus": element.raceStatus,
         });
       });
 
